@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useLang } from "@/context/LanguageContext";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -14,6 +15,8 @@ function fadeUp(delay: number) {
 }
 
 export default function Hero() {
+  const { t } = useLang();
+
   const scrollToContact = () => {
     document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -46,7 +49,6 @@ export default function Hero() {
             style={{ objectFit: "cover", width: "100%", height: "100%" }}
           />
         </div>
-        {/* Online dot */}
         <div
           style={{
             position: "absolute",
@@ -87,7 +89,7 @@ export default function Hero() {
           marginBottom: 10,
         }}
       >
-        @leomosconi
+        {t.hero.handle}
       </motion.p>
 
       {/* Tags */}
@@ -101,7 +103,7 @@ export default function Hero() {
           marginBottom: 18,
         }}
       >
-        {["Lifestyle", "Moda", "🇦🇷 · 🇮🇹 · 🇦🇺"].map((tag) => (
+        {t.hero.tags.map((tag) => (
           <span
             key={tag}
             style={{
@@ -131,9 +133,9 @@ export default function Hero() {
           marginBottom: 28,
         }}
       >
-        Argentino. Viví en Italia, hoy en Australia.
+        {t.hero.tagline}
         <br />
-        Lifestyle y moda desde el mundo.
+        {t.hero.subtitle}
       </motion.p>
 
       {/* CTAs */}
@@ -171,7 +173,7 @@ export default function Hero() {
             (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
           }}
         >
-          Trabajá conmigo →
+          {t.hero.cta}
         </button>
 
         <a
@@ -200,7 +202,7 @@ export default function Hero() {
             (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
           }}
         >
-          Ver en Instagram ↗
+          {t.hero.instagram}
         </a>
       </motion.div>
     </section>

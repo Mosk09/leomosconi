@@ -2,47 +2,25 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLang } from "@/context/LanguageContext";
 
-const services = [
-  {
-    icon: "🎬",
-    title: "Reels",
-    description:
-      "El 81.9% de mis views vienen de Reels. Integración natural con tu marca, storytelling auténtico que engancha desde el primer segundo.",
-  },
-  {
-    icon: "📱",
-    title: "Stories",
-    description:
-      "Formato íntimo y de alta confianza. Ideal para lanzamientos, descuentos o mostrar el behind-the-scenes de tu producto.",
-  },
-  {
-    icon: "🖼️",
-    title: "Posts & Carruseles",
-    description:
-      "Contenido que se guarda y se comparte. Perfecto para comunicar valores de marca o mostrar una colección completa.",
-  },
-];
+const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Services() {
+  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
     <section
       ref={ref}
-      style={{
-        padding: "32px 24px",
-        maxWidth: 480,
-        margin: "0 auto",
-        width: "100%",
-      }}
+      style={{ padding: "32px 24px", maxWidth: 480, margin: "0 auto", width: "100%" }}
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, ease }}
         style={{ marginBottom: 20 }}
       >
         <p
@@ -55,7 +33,7 @@ export default function Services() {
             marginBottom: 6,
           }}
         >
-          Para marcas
+          {t.services.eyebrow}
         </p>
         <h2
           style={{
@@ -65,18 +43,18 @@ export default function Services() {
             color: "var(--text)",
           }}
         >
-          ¿Qué puedo hacer por tu marca?
+          {t.services.heading}
         </h2>
       </motion.div>
 
       {/* Cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
-        {services.map((s, i) => (
+        {t.services.items.map((s, i) => (
           <motion.div
             key={s.title}
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease }}
             style={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -87,34 +65,14 @@ export default function Services() {
               alignItems: "flex-start",
             }}
           >
-            <span
-              style={{
-                fontSize: 28,
-                lineHeight: 1,
-                flexShrink: 0,
-                marginTop: 2,
-              }}
-            >
+            <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>
               {s.icon}
             </span>
             <div>
-              <p
-                style={{
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: "var(--text)",
-                  marginBottom: 4,
-                }}
-              >
+              <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>
                 {s.title}
               </p>
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.6,
-                }}
-              >
+              <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6 }}>
                 {s.description}
               </p>
             </div>
@@ -139,8 +97,7 @@ export default function Services() {
       >
         <span style={{ fontSize: 18 }}>🌎</span>
         <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.5 }}>
-          <strong style={{ color: "var(--text)", fontWeight: 600 }}>Audiencia:</strong>{" "}
-          25–34 años · Argentina, México, Chile, España
+          {t.services.audience}
         </p>
       </motion.div>
     </section>

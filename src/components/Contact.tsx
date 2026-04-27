@@ -2,8 +2,12 @@
 
 import { useRef, useState, FormEvent } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLang } from "@/context/LanguageContext";
+
+const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Contact() {
+  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [sent, setSent] = useState(false);
@@ -41,27 +45,15 @@ export default function Contact() {
     <section
       id="contacto"
       ref={ref}
-      style={{
-        padding: "32px 24px 48px",
-        maxWidth: 480,
-        margin: "0 auto",
-        width: "100%",
-      }}
+      style={{ padding: "32px 24px 48px", maxWidth: 480, margin: "0 auto", width: "100%" }}
     >
-      {/* Divider */}
-      <div
-        style={{
-          height: 1,
-          background: "var(--border)",
-          marginBottom: 32,
-        }}
-      />
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 32 }} />
 
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, ease }}
         style={{ marginBottom: 24 }}
       >
         <p
@@ -74,7 +66,7 @@ export default function Contact() {
             marginBottom: 6,
           }}
         >
-          Contacto
+          {t.contact.eyebrow}
         </p>
         <h2
           style={{
@@ -85,10 +77,10 @@ export default function Contact() {
             marginBottom: 8,
           }}
         >
-          ¿Trabajamos juntos?
+          {t.contact.heading}
         </h2>
         <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.6 }}>
-          Contame sobre tu marca y lo que buscás. Te respondo en menos de 24 horas.
+          {t.contact.subheading}
         </p>
       </motion.div>
 
@@ -96,7 +88,7 @@ export default function Contact() {
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, delay: 0.15, ease }}
         onSubmit={handleSubmit}
         style={{ display: "flex", flexDirection: "column", gap: 12 }}
       >
@@ -112,14 +104,14 @@ export default function Contact() {
               letterSpacing: "0.03em",
             }}
           >
-            Nombre y marca
+            {t.contact.fields.name}
           </label>
           <input
             id="nombre"
             name="nombre"
             type="text"
             required
-            placeholder="Ej: María · Marca XYZ"
+            placeholder={t.contact.fields.namePlaceholder}
             style={inputStyle}
             onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
             onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
@@ -138,14 +130,14 @@ export default function Contact() {
               letterSpacing: "0.03em",
             }}
           >
-            Tu email
+            {t.contact.fields.email}
           </label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            placeholder="hola@tumarca.com"
+            placeholder={t.contact.fields.emailPlaceholder}
             style={inputStyle}
             onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
             onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
@@ -164,14 +156,14 @@ export default function Contact() {
               letterSpacing: "0.03em",
             }}
           >
-            Mensaje
+            {t.contact.fields.message}
           </label>
           <textarea
             id="mensaje"
             name="mensaje"
             required
             rows={4}
-            placeholder="Contame sobre tu marca, el producto y qué tipo de colaboración buscás..."
+            placeholder={t.contact.fields.messagePlaceholder}
             style={{ ...inputStyle, resize: "vertical", minHeight: 100 }}
             onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
             onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
@@ -202,11 +194,10 @@ export default function Contact() {
               (e.currentTarget as HTMLButtonElement).style.background = "var(--accent)";
           }}
         >
-          {sent ? "¡Abriendo tu correo! ✓" : "Enviar mensaje →"}
+          {sent ? t.contact.submitted : t.contact.submit}
         </button>
       </motion.form>
 
-      {/* Alt contact */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
@@ -218,7 +209,7 @@ export default function Contact() {
           marginTop: 20,
         }}
       >
-        O escribime directo a{" "}
+        {t.contact.alt}{" "}
         <a
           href="mailto:leomosconi9@gmail.com"
           style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 500 }}
@@ -227,7 +218,6 @@ export default function Contact() {
         </a>
       </motion.p>
 
-      {/* Footer */}
       <p
         style={{
           fontSize: 11,
@@ -236,7 +226,7 @@ export default function Contact() {
           marginTop: 40,
         }}
       >
-        © 2026 Leo Mosconi
+        {t.contact.footer}
       </p>
     </section>
   );

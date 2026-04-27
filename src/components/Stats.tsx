@@ -2,23 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLang } from "@/context/LanguageContext";
+import type { InstagramMetrics } from "@/app/api/instagram/route";
 
-interface Stat {
-  value: string;
-  label: string;
-  prefix?: string;
-  suffix?: string;
-  numericValue?: number;
-}
+const ease = [0.22, 1, 0.36, 1] as const;
 
-const stats: Stat[] = [
-  { value: "54.1K", label: "Views totales", numericValue: 54100 },
-  { value: "13.1K", label: "Cuentas alcanzadas", numericValue: 13100 },
-  { value: "+1,224%", label: "Crecimiento de alcance" },
-  { value: "1,609", label: "Visitas al perfil", numericValue: 1609 },
-];
+const GROWTH = "+1,224%";
 
-function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: string }) {
+function AnimatedNumber({ target }: { target: number }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -38,28 +29,54 @@ function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: stri
   }, [inView, target]);
 
   const formatted =
-    count >= 1000
-      ? count >= 10000
-        ? `${(count / 1000).toFixed(1)}K`
-        : count.toLocaleString("es-AR")
+    count >= 10000
+      ? `${(count / 1000).toFixed(1)}K`
+      : count >= 1000
+      ? count.toLocaleString("es-AR")
       : count.toString();
 
-  return <span ref={ref}>{formatted}{suffix}</span>;
+  return <span ref={ref}>{formatted}</span>;
 }
 
 export default function Stats() {
+  const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [metrics, setMetrics] = useState<InstagramMetrics | null>(null);
+
+  useEffect(() => {
+    fetch("/api/instagram")
+      .then((r) => r.json())
+      .then((data: InstagramMetrics) => setMetrics(data))
+      .catch(() => {});
+  }, []);
+
+  const items = [
+    {
+      key: "impressions",
+      label: t.stats.items.views,
+      value: metrics?.impressions ?? 54115,
+    },
+    {
+      key: "reach",
+      label: t.stats.items.reach,
+      value: metrics?.reach ?? 13183,
+    },
+    {
+      key: "growth",
+      label: t.stats.items.growth,
+      value: null,
+      display: GROWTH,
+    },
+    ...(metrics?.followers != null
+      ? [{ key: "followers", label: t.stats.items.followers, value: metrics.followers }]
+      : [{ key: "profileVisits", label: t.stats.items.profileVisits, value: metrics?.profileViews ?? 1609 }]),
+  ];
 
   return (
     <section
       ref={ref}
-      style={{
-        padding: "0 24px 16px",
-        maxWidth: 480,
-        margin: "0 auto",
-        width: "100%",
-      }}
+      style={{ padding: "0 24px 16px", maxWidth: 480, margin: "0 auto", width: "100%" }}
     >
       <div
         style={{
@@ -69,33 +86,66 @@ export default function Stats() {
           border: "1px solid var(--border)",
         }}
       >
-        <p
+        {/* Header */}
+        <div
           style={{
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
             marginBottom: 20,
           }}
         >
-          Métricas recientes
-        </p>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+            }}
+          >
+            {t.stats.eyebrow}
+          </p>
+          {metrics?.isLive && (
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#fff",
+                background: "#E04B4B",
+                padding: "2px 8px",
+                borderRadius: 999,
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: "50%",
+                  background: "#fff",
+                  display: "inline-block",
+                  animation: "pulse 1.5s ease-in-out infinite",
+                }}
+              />
+              {t.stats.live}
+            </span>
+          )}
+        </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 16,
-          }}
-        >
-          {stats.map((stat, i) => (
+        {/* Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          {items.map((item, i) => (
             <motion.div
-              key={stat.label}
+              key={item.key}
               initial={{ opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, delay: i * 0.08, ease }}
               style={{
                 background: "var(--bg)",
                 borderRadius: 14,
@@ -113,10 +163,10 @@ export default function Stats() {
                   marginBottom: 6,
                 }}
               >
-                {stat.numericValue !== undefined ? (
-                  <AnimatedNumber target={stat.numericValue} />
+                {item.display ? (
+                  <span>{item.display}</span>
                 ) : (
-                  <span>{stat.value}</span>
+                  <AnimatedNumber target={item.value!} />
                 )}
               </div>
               <div
@@ -127,7 +177,7 @@ export default function Stats() {
                   letterSpacing: "0.02em",
                 }}
               >
-                {stat.label}
+                {item.label}
               </div>
             </motion.div>
           ))}
@@ -142,9 +192,16 @@ export default function Stats() {
             letterSpacing: "0.02em",
           }}
         >
-          Período: Mar 21 – Abr 19, 2026
+          {metrics?.isLive ? t.stats.periodLive : t.stats.period}
         </p>
       </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
     </section>
   );
 }
