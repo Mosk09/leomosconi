@@ -21,7 +21,7 @@ export const translations = {
         profileVisits: "Visitas al perfil",
         followers: "Seguidores",
       },
-      period: "Período: Mar 21 – Abr 19, 2026",
+      period: "Período: Mar 28 – Abr 26, 2026",
       periodLive: "Actualizado hace menos de 1 hora",
     },
     services: {
@@ -91,7 +91,7 @@ export const translations = {
         profileVisits: "Profile visits",
         followers: "Followers",
       },
-      period: "Period: Mar 21 – Apr 19, 2026",
+      period: "Period: Mar 28 – Apr 26, 2026",
       periodLive: "Updated less than 1 hour ago",
     },
     services: {

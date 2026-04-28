@@ -7,7 +7,7 @@ import type { InstagramMetrics } from "@/app/api/instagram/route";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const GROWTH = "+1,224%";
+const GROWTH = "+545.1%";
 
 function AnimatedNumber({ target }: { target: number }) {
   const [count, setCount] = useState(0);
@@ -55,12 +55,12 @@ export default function Stats() {
     {
       key: "impressions",
       label: t.stats.items.views,
-      value: metrics?.impressions ?? 54115,
+      value: metrics?.impressions ?? 62175,
     },
     {
       key: "reach",
       label: t.stats.items.reach,
-      value: metrics?.reach ?? 13183,
+      value: metrics?.reach ?? 14411,
     },
     {
       key: "growth",
@@ -70,7 +70,7 @@ export default function Stats() {
     },
     ...(metrics?.followers != null
       ? [{ key: "followers", label: t.stats.items.followers, value: metrics.followers }]
-      : [{ key: "profileVisits", label: t.stats.items.profileVisits, value: metrics?.profileViews ?? 1609 }]),
+      : [{ key: "profileVisits", label: t.stats.items.profileVisits, value: metrics?.profileViews ?? 1878 }]),
   ];
 
   return (

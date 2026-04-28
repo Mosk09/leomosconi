@@ -12,9 +12,9 @@ export interface InstagramMetrics {
 
 const FALLBACK: InstagramMetrics = {
   followers: null,
-  reach: 13183,
-  impressions: 54115,
-  profileViews: 1609,
+  reach: 14411,
+  impressions: 62175,
+  profileViews: 1878,
   isLive: false,
 };
 
