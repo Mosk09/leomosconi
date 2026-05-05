@@ -32,8 +32,8 @@ export default function Hero() {
       >
         <div
           style={{
-            width: 96,
-            height: 96,
+            width: 116,
+            height: 116,
             borderRadius: "50%",
             overflow: "hidden",
             boxShadow: "0 4px 24px rgba(201,123,75,0.2)",
@@ -43,10 +43,10 @@ export default function Hero() {
           <Image
             src="/avatar.jpg"
             alt="Leo Mosconi — lifestyle creator"
-            width={96}
-            height={96}
+            width={116}
+            height={116}
             priority
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            style={{ objectFit: "cover", objectPosition: "center top", width: "100%", height: "100%" }}
           />
         </div>
         <div
